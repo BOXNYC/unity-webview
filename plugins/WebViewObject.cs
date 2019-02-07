@@ -49,6 +49,7 @@ public class WebViewObject : MonoBehaviour
     Callback onError;
     Callback onHttpError;
     Callback onStarted;
+    Callback onChanged;
     Callback onLoaded;
     bool visibility;
     int mMarginLeft;
@@ -333,12 +334,14 @@ public class WebViewObject : MonoBehaviour
         Callback httpErr = null,
         Callback ld = null,
         bool enableWKWebView = false,
-        Callback started = null)
+        Callback started = null,
+        Callback changed = null)
     {
         onJS = cb;
         onError = err;
         onHttpError = httpErr;
         onStarted = started;
+        onChanged = changed;
         onLoaded = ld;
 #if UNITY_WEBPLAYER
         Application.ExternalCall("unityWebView.init", name);
@@ -666,6 +669,14 @@ public class WebViewObject : MonoBehaviour
             onStarted(url);
         }
     }
+    
+    public void CallOnChanged(string url)
+    {
+        if (onChanged != null)
+        {
+            onChanged(url);
+        }
+    }
 
     public void CallOnLoaded(string url)
     {
@@ -801,6 +812,9 @@ public class WebViewObject : MonoBehaviour
                 break;
             case 'S':
                 CallOnStarted(s.Substring(1));
+                break;
+            case 'C':
+                CallOnChanged(s.Substring(1));
                 break;
             case 'L':
                 CallOnLoaded(s.Substring(1));
