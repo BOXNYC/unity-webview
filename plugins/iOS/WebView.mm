@@ -167,6 +167,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     webView.hidden = YES;
     
     [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
+    [webView addObserver:self forKeyPath: @"URL" options: NSKeyValueObservingOptionNew context:nil];
     
     [view addSubview:webView];
     
@@ -245,6 +246,13 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
         UnitySendMessage(
                          [gameObjectName UTF8String],
                          "CallOnLoaded",
+                         [[[webView URL] absoluteString] UTF8String]);
+        
+    }
+    if ([keyPath isEqualToString:@"URL"] && [webView URL] != nil) {
+        UnitySendMessage(
+                         [gameObjectName UTF8String],
+                         "CallOnChange",
                          [[[webView URL] absoluteString] UTF8String]);
         
     }
